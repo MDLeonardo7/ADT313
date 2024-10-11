@@ -1,0 +1,79 @@
+.main-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.form-container {
+  padding: 4rem 2rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-container > div {
+  margin-bottom: 12px;
+}
+
+.form-group {
+  display: block;
+  float: left;
+}
+
+.form-group label {
+  width: 110px;
+  margin-right: 8px;
+  text-align: left;
+}
+
+.errors {
+  color: red;
+  font-size: 12px;
+}
+
+.submit-container {
+  margin-top: 12px;
+  text-align: center;
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+}
+
+.submit-container button {
+  padding: 10px 20px;
+  background-color: #9c9c9c; 
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 5px 0; 
+}
+
+.submit-container button:hover {
+  background-color: #45a049; 
+}
+
+.back-to-login {
+  margin-top: 10px; 
+}
+
+.back-to-login button {
+  padding: 10px 20px;
+  background-color: #9c9c9c; 
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+label {
+  display: inline-block;
+  clear: left;
+  width: 250px;
+  text-align: right;
+}
