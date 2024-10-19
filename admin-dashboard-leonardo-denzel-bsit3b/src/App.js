@@ -5,6 +5,7 @@ import Login from './pages/Public/Login/Login';
 import Dashboard from './pages/Main/Dashboard/Dashboard';
 import Main from './pages/Main/Main';
 import Register from './pages/Public/Register/Register';
+import Dashboard from './pages/Main/Movie/Movie';
 
 
 const router = createBrowserRouter([
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: 'dashboard', 
         element: <Dashboard />,
+      },
+      {
+        path: 'movie', 
+        element: <Movie />,
       },
     ],
   },

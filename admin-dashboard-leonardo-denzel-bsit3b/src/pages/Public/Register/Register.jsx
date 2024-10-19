@@ -1,120 +1,89 @@
 import { useState } from 'react';
 import './Register.css';
-import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 function Register() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [firstname, setFirstName] = useState('');
-  const [middlename, setMiddleName] = useState('');
-  const [lastname, setLastName] = useState('');
-  const [contact, setContact] = useState('');
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    firstName: '',
+    lastName: '',
+    middleName: '',
+    contactNo: '',
+    role: 'user', // Default role
+  });
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
-  
-    const data = { email, password, firstname, middlename, lastname, contact };
-  
-    try {
-      const response = await fetch('http://localhost/movieproject-api/register.php', { 
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-  
-      if (!response.ok) {
-        throw new Error('Network response was not ok ' + response.statusText);
+  const [status, setStatus] = useState('idle');
+  const [isFieldsDirty, setIsFieldsDirty] = useState(false);
+
+  const handleOnChange = (event) => {
+    setIsFieldsDirty(true);
+    const { name, value } = event.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleRegister = async () => {
+    if (formData.email && formData.password && formData.firstName && formData.lastName && formData.contactNo) {
+      setStatus('loading');
+      try {
+        await axios.post('/admin/register', formData, {
+          headers: { 'Content-Type': 'application/json' },
+        });
+        setStatus('success');
+        alert('User registered successfully');
+      } catch (error) {
+        console.log(error);
+        setStatus('error');
+        alert('Failed to register');
       }
-  
-      const result = await response.json();
-      console.log(result);
-    } catch (error) {
-      console.error('Error:', error);
+    } else {
+      setIsFieldsDirty(true);
+      alert('All fields are required!');
     }
   };
-  
-  
+
   return (
     <div className='Register'>
       <div className='main-container'>
         <h3>Register</h3>
-        <form onSubmit={handleRegister}>
+        <form>
           <div className='form-container'>
             <div className='form-group'>
               <label>Email:</label>
-              <input
-                type='email'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
+              <input type='email' name='email' value={formData.email} onChange={handleOnChange} required />
             </div>
-
             <div className='form-group'>
               <label>Password:</label>
-              <input
-                type='password'
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
+              <input type='password' name='password' value={formData.password} onChange={handleOnChange} required />
             </div>
-
             <div className='form-group'>
               <label>First Name:</label>
-              <input
-                type='text'
-                value={firstname}
-                onChange={(e) => setFirstName(e.target.value)}
-                required
-              />
+              <input type='text' name='firstName' value={formData.firstName} onChange={handleOnChange} required />
             </div>
-
-            <div className='form-group'>
-              <label>Middle Name:</label>
-              <input
-                type='text'
-                value={middlename}
-                onChange={(e) => setMiddleName(e.target.value)}
-              />
-            </div>
-
             <div className='form-group'>
               <label>Last Name:</label>
-              <input
-                type='text'
-                value={lastname}
-                onChange={(e) => setLastName(e.target.value)}
-                required
-              />
+              <input type='text' name='lastName' value={formData.lastName} onChange={handleOnChange} required />
             </div>
-
             <div className='form-group'>
-              <label>Contact:</label>
-              <input
-                type='tel'
-                value={contact}
-                onChange={(e) => setContact(e.target.value)}
-                required
-              />
+              <label>Middle Name:</label>
+              <input type='text' name='middleName' value={formData.middleName} onChange={handleOnChange} />
             </div>
-
+            <div className='form-group'>
+              <label>Contacts:</label>
+              <input type='text' name='contactNo' value={formData.contactNo} onChange={handleOnChange} required />
+            </div>
             <div className='submit-container'>
-              <button type='submit'>Register</button>
-              <div className='back-to-login'>
-                <Link to='/'>
-                  <button>Back to Login</button>
-                </Link>
-              </div>
+              <button type='button' onClick={handleRegister} disabled={status === 'loading'}>
+                {status === 'idle' ? 'Register' : 'Loading...'}
+              </button>
             </div>
           </div>
-          
         </form>
-        
       </div>
-    </div>
+    </div>    
   );
 }
 

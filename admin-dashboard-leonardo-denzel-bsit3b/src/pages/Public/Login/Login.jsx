@@ -3,8 +3,6 @@ import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import { useDebounce } from '../../../utils/hooks/useDebounce';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -43,32 +41,29 @@ function Login() {
   };
 
   const handleLogin = async () => {
-    const data = { email, password }; 
+    const data = { email, password };
     setStatus('loading');
+    console.log(data);
 
-    try {
-        const res = await axios.post('http://localhost/movieproject-api/login.php', data, {
-            headers: { 'Content-Type': 'application/json' }, 
-        });
-
-        
-        console.log("Login successful:", res.data);
+    await axios({
+      method: 'post',
+      url: '/admin/login',
+      data,
+      headers: { 'Access-Control-Allow-Origin': '*' },
+    })
+      .then((res) => {
+        console.log(res);
         localStorage.setItem('accessToken', res.data.access_token);
-        navigate('/main/dashboard');
-    } catch (error) {
-        console.error("Login failed:", error);
-        
-        if (error.response) {
-            
-            console.error("Response data:", error.response.data);
-            alert(error.response.data.message); 
-        } else {
-            alert("An error occurred while logging in.");
-        }
-    } finally {
+        navigate('/main/movie');
         setStatus('idle');
-    }
-};
+      })
+      .catch((e) => {
+        console.log(e);
+        setStatus('idle');
+        // alert(e.response.data.message);
+      });
+  };
+
   useEffect(() => {
     setDebounceState(true);
   }, [userInputDebounce]);
@@ -140,11 +135,10 @@ function Login() {
               </button>
             </div>
             <div className='register-container'>
-              <Link to='/register'>
+              <a href='/register'>
                 <small>Register</small>
-              </Link>
+              </a>
             </div>
-
           </div>
         </form>
       </div>
